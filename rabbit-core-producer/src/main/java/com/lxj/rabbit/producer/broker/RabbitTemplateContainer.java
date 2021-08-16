@@ -74,9 +74,9 @@ public class RabbitTemplateContainer implements RabbitTemplate.ConfirmCallback {
         String messageId = strings.get(0);
         Long sendTime = Long.valueOf(strings.get(1));
         if (ack){
-            log.info("send message is ok, confirm messsageId {}, send time is {}", messageId, sendTime);
+            log.info("send message is ok, confirm message id {}, send time is {}", messageId, sendTime);
         }else {
-            log.error("send message is fail, confirm messsageId {}, send time is {}", messageId, sendTime);
+            log.error("send message is fail, confirm message id {}, send time is {}", messageId, sendTime);
         }
     }
 }

@@ -22,6 +22,8 @@ public class RabbitBrokerImpl implements RabbitBroker {
     @Autowired
     private RabbitTemplateContainer rabbitTemplateContainer;
 
+
+
     @Override
     public void rapidSend(Message message) {
         message.setMessageType(MessageType.RAPID);
