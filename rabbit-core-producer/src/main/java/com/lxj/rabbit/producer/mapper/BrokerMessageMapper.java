@@ -13,13 +13,25 @@ import java.util.List;
  */
 @Mapper
 public interface BrokerMessageMapper {
-    int insert(BrokerMessage brokerMessage);
-    int insertSelective(BrokerMessage brokerMessage);
-    int updateByPrimaryKey(BrokerMessage brokerMessage);
-    int updateByPrimaryKeySelective(BrokerMessage brokerMessage);
-    void changeBrokerMessageStatus(@Param("messageId") String messageId, @Param("messageStatus") String messageStatus);
+    int deleteByPrimaryKey(String messageId);
+    
+    int insert(BrokerMessage record);
+
+    int insertSelective(BrokerMessage record);
+
     BrokerMessage selectByPrimaryKey(String messageId);
-    List<BrokerMessage> queryBrokerMessageStatus(@Param("messageStatus") String messageStatus);
-    List<BrokerMessage> queryBrokerMessageStatus4TimeOut(@Param("messageStatus") String messageStatus);
-    int update4TryCount(@Param("messageId") String messageId, @Param("updateTime") Date updateTime);
+
+    int updateByPrimaryKeySelective(BrokerMessage record);
+
+    int updateByPrimaryKeyWithBLOBs(BrokerMessage record);
+
+    int updateByPrimaryKey(BrokerMessage record);
+	
+	void changeBrokerMessageStatus(@Param("brokerMessageId")String brokerMessageId, @Param("brokerMessageStatus")String brokerMessageStatus, @Param("updateTime")Date updateTime);
+
+	List<BrokerMessage> queryBrokerMessageStatus4Timeout(@Param("brokerMessageStatus")String brokerMessageStatus);
+	
+	List<BrokerMessage> queryBrokerMessageStatus(@Param("brokerMessageStatus")String brokerMessageStatus);
+	
+	int update4TryCount(@Param("brokerMessageId")String brokerMessageId, @Param("updateTime")Date updateTime);
 }
