@@ -8,6 +8,7 @@ import com.lxj.rabbit.common.convert.RabbitMessageConverter;
 import com.lxj.rabbit.common.serializer.Serializer;
 import com.lxj.rabbit.common.serializer.SerializerFactory;
 import com.lxj.rabbit.common.serializer.impl.JacksonSerializerFactory;
+import com.lxj.rabbit.producer.service.MessageStoreService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
@@ -15,6 +16,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ReflectionUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -39,6 +41,8 @@ public class RabbitTemplateContainer implements RabbitTemplate.ConfirmCallback {
     private ConnectionFactory connectionFactory;
 
     @Autowired
+    private MessageStoreService messageStoreService;
+
     private SerializerFactory factory = JacksonSerializerFactory.INSTANCE;
 
     public RabbitTemplate getRabbitTemplate(Message message) throws NullPointerException {
@@ -74,8 +78,11 @@ public class RabbitTemplateContainer implements RabbitTemplate.ConfirmCallback {
         String messageId = strings.get(0);
         Long sendTime = Long.valueOf(strings.get(1));
         if (ack){
+            //更新消息发送状态
+            messageStoreService.success(messageId);
             log.info("send message is ok, confirm message id {}, send time is {}", messageId, sendTime);
         }else {
+            //消息补偿
             log.error("send message is fail, confirm message id {}, send time is {}", messageId, sendTime);
         }
     }

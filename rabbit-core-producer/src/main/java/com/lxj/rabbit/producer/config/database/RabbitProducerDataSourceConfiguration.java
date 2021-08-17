@@ -1,4 +1,4 @@
-package com.bfxy.rabbit.producer.config.database;
+package com.lxj.rabbit.producer.config.database;
 
 import java.sql.SQLException;
 

@@ -1,5 +1,4 @@
-
-package com.bfxy.rabbit.producer.config.database;
+package com.lxj.rabbit.producer.config.database;
 
 import org.mybatis.spring.mapper.MapperScannerConfigurer;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;

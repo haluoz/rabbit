@@ -1,4 +1,4 @@
-package com.bfxy.rabbit.producer.config.database;
+package com.lxj.rabbit.producer.config.database;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
@@ -28,7 +28,7 @@ public class RabbitProducerMyBatisConfiguration {
 		bean.setDataSource(rabbitProducerDataSource);
 		ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
 		try {
-			bean.setMapperLocations(resolver.getResources("classpath:com/bfxy/rabbit/producer/mapping/*.xml"));
+			bean.setMapperLocations(resolver.getResources("classpath:mapping/*.xml"));
 			SqlSessionFactory sqlSessionFactory = bean.getObject();
 			sqlSessionFactory.getConfiguration().setCacheEnabled(Boolean.TRUE);
 			return sqlSessionFactory;

@@ -71,7 +71,7 @@ public class JacksonSerializer implements Serializer {
     public <T> T deserialize(String content) {
         try {
             return MAPPER.readValue(content, type);
-        } catch (JsonProcessingException e) {
+        } catch (IOException e) {
             log.error("反序列化错误", e);
         }
         return  null;

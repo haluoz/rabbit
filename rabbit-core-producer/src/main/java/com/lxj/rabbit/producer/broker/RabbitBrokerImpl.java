@@ -2,12 +2,19 @@ package com.lxj.rabbit.producer.broker;
 
 import com.lxj.rabbit.api.Message;
 import com.lxj.rabbit.api.MessageType;
+import com.lxj.rabbit.producer.constant.BrokerMessageConst;
+import com.lxj.rabbit.producer.constant.BrokerMessageStatus;
+import com.lxj.rabbit.producer.entity.BrokerMessage;
+import com.lxj.rabbit.producer.service.MessageStoreService;
+import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.Date;
 
 /**
  * 发送不同消息的实现类
@@ -22,7 +29,8 @@ public class RabbitBrokerImpl implements RabbitBroker {
     @Autowired
     private RabbitTemplateContainer rabbitTemplateContainer;
 
-
+    @Autowired
+    private MessageStoreService messageStoreService;
 
     @Override
     public void rapidSend(Message message) {
@@ -55,6 +63,17 @@ public class RabbitBrokerImpl implements RabbitBroker {
     @Override
     public void relianceSend(Message message) {
         message.setMessageType(MessageType.RELIANCE);
+        //消息保存到数据库
+        Date now = new Date();
+        BrokerMessage brokerMessage = new BrokerMessage();
+        brokerMessage.setMessageId(message.getMessageId());
+        brokerMessage.setStatus(BrokerMessageStatus.SENDING.getCode());
+        brokerMessage.setNextRetry(DateUtils.addMinutes(now, BrokerMessageConst.TIMEOUT));
+        brokerMessage.setCreateTime(now);
+        brokerMessage.setUpdateTime(now);
+        brokerMessage.setMessage(message);
+        messageStoreService.insert(brokerMessage);
+        //真正的发送消息
         sendKernel(message);
     }
 
