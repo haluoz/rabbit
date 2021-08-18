@@ -44,7 +44,8 @@ public class RabbitBrokerImpl implements RabbitBroker {
      */
     private void sendKernel(Message message) {
         AsyncBaseQueue.submit(() -> {
-            CorrelationData correlationData = new CorrelationData(String.format("%s#%s", message.getMessageId(), System.currentTimeMillis()));
+            CorrelationData correlationData = new CorrelationData(
+                    String.format("%s#%s#%s", message.getMessageId(), System.currentTimeMillis(), message.getMessageType()));
             String topic = message.getTopic();
             String routingKey = message.getRoutingKey();
             RabbitTemplate rabbitTemplate = rabbitTemplateContainer.getRabbitTemplate(message);
@@ -63,16 +64,19 @@ public class RabbitBrokerImpl implements RabbitBroker {
     @Override
     public void relianceSend(Message message) {
         message.setMessageType(MessageType.RELIANCE);
-        //消息保存到数据库
-        Date now = new Date();
-        BrokerMessage brokerMessage = new BrokerMessage();
-        brokerMessage.setMessageId(message.getMessageId());
-        brokerMessage.setStatus(BrokerMessageStatus.SENDING.getCode());
-        brokerMessage.setNextRetry(DateUtils.addMinutes(now, BrokerMessageConst.TIMEOUT));
-        brokerMessage.setCreateTime(now);
-        brokerMessage.setUpdateTime(now);
-        brokerMessage.setMessage(message);
-        messageStoreService.insert(brokerMessage);
+        BrokerMessage brokerMessage1 = messageStoreService.selectByMessageId(message.getMessageId());
+        if (brokerMessage1 == null) {
+            //消息保存到数据库
+            Date now = new Date();
+            BrokerMessage brokerMessage = new BrokerMessage();
+            brokerMessage.setMessageId(message.getMessageId());
+            brokerMessage.setStatus(BrokerMessageStatus.SENDING.getCode());
+            brokerMessage.setNextRetry(DateUtils.addMinutes(now, BrokerMessageConst.TIMEOUT));
+            brokerMessage.setCreateTime(now);
+            brokerMessage.setUpdateTime(now);
+            brokerMessage.setMessage(message);
+            messageStoreService.insert(brokerMessage);
+        }
         //真正的发送消息
         sendKernel(message);
     }

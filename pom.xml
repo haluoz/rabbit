@@ -14,6 +14,7 @@
         <module>rabbit-common</module>
         <module>rabbit-core-producer</module>
         <module>rabbit-task</module>
+        <module>rabbit-test</module>
     </modules>
 
     <properties>
