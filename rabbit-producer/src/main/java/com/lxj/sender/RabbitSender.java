@@ -48,6 +48,6 @@ public class RabbitSender {
                 return message;
             }
         };
-        rabbitTemplate.convertAndSend("exchange-1", "springboot.abc", msg, correlationData);
+        rabbitTemplate.convertAndSend("exchange-2", "lxj.*", msg, correlationData);
     }
 }

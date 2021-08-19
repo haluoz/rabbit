@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.HashMap;
@@ -17,6 +18,7 @@ import java.util.UUID;
  */
 @SpringBootTest(classes = MessageTest.class)
 @RunWith(SpringRunner.class)
+@ComponentScan("com.lxj.rabbit.*")
 public class MessageTest {
 
     @Autowired
@@ -32,8 +34,8 @@ public class MessageTest {
             attributes.put("age", "18");
             Message message = new Message(
                     uniqueId,
-                    "exchange-1",
-                    "springboot.abc",
+                    "exchange-2",
+                    "lxj.test",
                     attributes,
                     0);
             message.setMessageType(MessageType.RELIANCE);
@@ -41,6 +43,6 @@ public class MessageTest {
             producerClient.send(message);
         }
 
-        Thread.sleep(100000);
+        Thread.sleep(10000);
     }
 }

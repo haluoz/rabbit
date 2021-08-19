@@ -3,7 +3,6 @@ package com.lxj.rabbit.producer.service;
 import com.lxj.rabbit.producer.constant.BrokerMessageStatus;
 import com.lxj.rabbit.producer.entity.BrokerMessage;
 import com.lxj.rabbit.producer.mapper.BrokerMessageMapper;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
